@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<head>
+    <title>Новое обращение </title>
+</head>
+
+<title>Sort a HTML Table Alphabetically</title>
+
+</head>
+<body>
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-1" style="border-block-end-color: ivory">
+            <div class="sidenav">
+                <a href="appeal">Новое обращение</a>
+                <a href="/hello">Главная</a>
+            </div>
+
+
+        </div>
+
+        <div class="col-11" style="border-block-end-color: ivory">
+
+
+            <div th:switch="${appeal}">
+
+
+                <table id="myTable">
+                    <thead>
+                    <tr>
+                        <th class="table-active" onclick="sortTable(0)">№</th>
+                        <th class="table-active" onclick="sortTable(1)">Организациия</th>
+                        <th class="table-active" onclick="sortTable(2)">Дата создания</th>
+                        <th class="table-active" onclick="sortTable(3)">Дата ответа</th>
+                        <th class="table-active" onclick="sortTable(4)">Ответственный</th>
+                        <th class="table-active" onclick="sortTable(5)">Статус</th>
+                        <th class="table-active" onclick="sortTable(6)">Описание</th>
+                        <th class="table-active" onclick="sortTable(7)">Посмотреть</th>
+                        <th class="table-active" onclick="sortTable(8)">Удалить</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${appeal}">
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.nameCompany}"></td>
+                        <td th:text="${#dates.format(user.dataCreation, 'dd-MM-yyyy')}"></td>
+                        <td th:text="${#dates.format(user.dataAnswer, 'dd-MM-yyyy')}"></td>
+                        <td th:text="${user.footing}"></td>
+                        <td th:text="${user.status}"></td>
+                        <td th:text="${user.briefDescription}"></td>
+
+                        <td><a th:href="@{appeal/{id}(id=${user.id})}">Посмотреть</a></td>
+                        <td><a th:href="@{appeal-delete/{id}(id=${user.id})}">Удалить</a></td>
+
+
+                        </td>
+
+
+                    </tr>
+
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+<td>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Редактировать
+    </button>
+    <script>
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("myTable");
+            switching = true;
+            //Set the sorting direction to ascending:
+            dir = "asc";
+            /*Make a loop that will continue until
+            no switching has been done:*/
+            while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.getElementsByTagName("TR");
+                /*Loop through all table rows (except the
+                first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                    //start by saying there should be no switching:
+                    shouldSwitch = false;
+                    /*Get the two elements you want to compare,
+                    one from current row and one from the next:*/
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    /*check if the two rows should switch place,
+                    based on the direction, asc or desc:*/
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    /*If a switch has been marked, make the switch
+                    and mark that a switch has been done:*/
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    //Each time a switch is done, increase this count by 1:
+                    switchcount++;
+                } else {
+                    /*If no switching has been done AND the direction is "asc",
+                    set the direction to "desc" and run the while loop again.*/
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        table {
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            cursor: pointer;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 16px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2
+        }
+
+
+        .sidenav {
+            height: 100%;
+            width: 160px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #708090;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #000000;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .main {
+            margin-left: 160px; /* Same as the width of the sidenav */
+            font-size: 28px; /* Increased text to enable scrolling */
+            padding: 0px 10px;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+    </style>
+</html>
